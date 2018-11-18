@@ -1,0 +1,29 @@
+package queues;
+
+import java.util.concurrent.BlockingQueue;
+
+public class Service implements Runnable {
+    private final BlockingQueue<Integer> queue;
+    private final int poisonPill;
+
+    Service(BlockingQueue<Integer> queue, int poisonPill) {
+        this.queue = queue;
+        this.poisonPill = poisonPill;
+    }
+
+    public void run() {
+        try {
+            while (true) {
+                Integer number = queue.take();
+                if (number.equals(poisonPill)) {
+                    return;
+                }
+                int result = number*number;
+//                String res = result.toString();
+                System.out.println(Thread.currentThread().getName() + " result: " + result);
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
